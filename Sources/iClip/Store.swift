@@ -11,6 +11,9 @@ final class Store: ObservableObject {
     @Published var error: String?
     @Published var launchAtLogin = SMAppService.mainApp.status == .enabled
     @Published var ready = false
+    @Published var showMenuBarIcon = UserDefaults.standard.object(forKey: "showMenuBarIcon") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showMenuBarIcon, forKey: "showMenuBarIcon") }
+    }
     private let disk = DispatchQueue(label: "iClip.persistence", qos: .utility)
     private let persistence: Persistence
     private var timer: Timer?

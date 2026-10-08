@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import Combine
 import iClipCore
 
 final class ClipboardPanel: NSPanel {
@@ -16,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var previousApp: NSRunningApplication?
     private var monitor: Any?
     private var pasteGeneration = UUID()
+    private var menuBarSubscription: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -36,9 +38,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         menu.addItem(withTitle: "退出 iClip", action: #selector(quit), keyEquivalent: "q")
         for item in menu.items { item.target = self }
         statusItem.menu = menu
+        menuBarSubscription = store.$showMenuBarIcon.sink { [weak self] visible in
+            self?.statusItem.isVisible = visible
+        }
         monitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
             Task { @MainActor in self?.hidePanel() }
         }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        hidePanel()
+        openSettings()
+        return false
     }
 
     @objc private func openPanel() { showPanel() }

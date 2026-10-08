@@ -168,6 +168,10 @@ struct SettingsView: View {
                 }
                 Text("组合键必须包含 Control、Option 或 Command。").font(.caption).foregroundStyle(.secondary)
                 Toggle("开机启动", isOn: Binding(get: { store.launchAtLogin }, set: { store.setLaunchAtLogin($0) }))
+                Toggle("显示菜单栏图标", isOn: $store.showMenuBarIcon)
+                Text("隐藏图标后快捷键仍有效。再次打开 iClip 应用即可进入设置。")
+                    .font(.caption).foregroundStyle(.secondary)
+                Button("退出 iClip") { NSApp.terminate(nil) }
             }
             Section("粘贴权限") {
                 Text("自动粘贴需要辅助功能权限。未授权时，选择条目只复制内容，再按 ⌘V 即可粘贴。")
