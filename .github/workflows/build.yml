@@ -1,0 +1,54 @@
+name: Build macOS app
+
+on:
+  push:
+    branches: [master, main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: macOS / ${{ matrix.arch }}
+    runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x86_64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Xcode SDK
+        run: |
+          xcodebuild -version
+          SDK_MAJOR="$(xcrun --sdk macosx --show-sdk-version | cut -d. -f1)"
+          test "$SDK_MAJOR" -ge 26
+      - name: Run native tests
+        run: swift test
+      - name: Build application with bundled icons
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: bash scripts/build-app.sh
+      - name: Verify app resources and signature
+        run: |
+          plutil -lint dist/iClip.app/Contents/Info.plist
+          test -s dist/iClip.app/Contents/Resources/AppIcon.icns
+          test -s dist/iClip.app/Contents/Resources/Assets.car
+          test -s dist/iClip.app/Contents/Resources/MenuBarIcon.png
+          test -d dist/iClip.app/Contents/Resources/iClip_iClip.bundle
+          lipo -verify_arch "${{ matrix.arch }}" dist/iClip.app/Contents/MacOS/iClip
+          codesign --verify --strict dist/iClip.app
+      - name: Create distributable ZIP
+        run: ditto -c -k --sequesterRsrc --keepParent dist/iClip.app "dist/iClip-${{ matrix.arch }}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iClip-${{ matrix.arch }}
+          path: dist/iClip-${{ matrix.arch }}.zip
+          if-no-files-found: error
+          retention-days: 14

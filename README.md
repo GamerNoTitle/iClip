@@ -30,6 +30,14 @@ Bundle Identifier：`io.github.gamernotitle.iclip`。
 
 默认使用 ad-hoc 签名，适合本地试用；重复构建可能需要重新授权辅助功能。可通过 `SIGN_IDENTITY="Apple Development: ..." bash scripts/build-app.sh` 使用本机正式签名身份。分发时还需 Developer ID 签名与公证。
 
+## GitHub Actions
+
+`.github/workflows/build.yml` 在 push、pull request 和手动触发时运行，分别打包 arm64 与 x86_64。Runner 使用 macos-26 并检查 SDK >=26，运行测试、编译图标资产目录、校验签名和资源，最后上传 iClip-arm64 / iClip-x86_64 ZIP artifact。v 开头标签也触发构建；目前不会自动创建 GitHub Release。
+
+下载对应架构的 ZIP 并解压。CI 产物为 ad-hoc 签名，未做 Developer ID 公证；Gatekeeper 可能要求手动允许，辅助功能权限也可能需重新授权。工作流尚需 push 后在 GitHub 实际运行验证。
+
+应用图标同时提供 AppIcon.icns 与编译后的 Assets.car，并明确设置 CFBundleIconFile/CFBundleIconName。若 Finder 仍缓存旧图标，请重新解压到新位置再检查。
+
 ## 使用与权限
 
 1. 启动应用，菜单栏出现剪贴板图标。
