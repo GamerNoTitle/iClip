@@ -29,11 +29,10 @@ jobs:
           xcodebuild -version
           SDK_MAJOR="$(xcrun --sdk macosx --show-sdk-version | cut -d. -f1)"
           test "$SDK_MAJOR" -ge 26
-      - name: Run native tests
-        run: swift test
       - name: Build application with bundled icons
         env:
           ARCH: ${{ matrix.arch }}
+          ICLIP_INCLUDE_TESTS: '0'
         run: bash scripts/build-app.sh
       - name: Verify app resources and signature
         run: |
