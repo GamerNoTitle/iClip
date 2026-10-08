@@ -49,9 +49,45 @@ func render(size: Int, preview: Bool = false) throws -> Data {
     return bitmap.representation(using: .png, properties: [:])!
 }
 
+func renderApp(size: Int) throws -> Data {
+    let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: size, pixelsHigh: size,
+        bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+        colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
+    let context = NSGraphicsContext(bitmapImageRep: bitmap)!
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = context
+    let cg = context.cgContext
+    cg.scaleBy(x: CGFloat(size) / 1024, y: CGFloat(size) / 1024)
+    func color(_ hex: Int) -> NSColor {
+        NSColor(srgbRed: CGFloat((hex >> 16) & 255) / 255,
+                green: CGFloat((hex >> 8) & 255) / 255,
+                blue: CGFloat(hex & 255) / 255, alpha: 1)
+    }
+    let blue = color(0x3498DB)
+    blue.setFill()
+    NSBezierPath(roundedRect: NSRect(x: 0, y: 0, width: 1024, height: 1024), xRadius: 210, yRadius: 210).fill()
+    // SVG coordinates converted from top-left to AppKit's bottom-left origin.
+    color(0x1ABC9C).setFill()
+    NSBezierPath(roundedRect: NSRect(x: 170.666667, y: 85.333333, width: 682.666666, height: 768),
+                 xRadius: 96, yRadius: 96).fill()
+    color(0xECF0F1).setFill()
+    NSBezierPath(roundedRect: NSRect(x: 341.333333, y: 746.666667, width: 341.333334, height: 192),
+                 xRadius: 96, yRadius: 96).fill()
+    blue.setFill()
+    NSBezierPath(roundedRect: NSRect(x: 405.333333, y: 810.666667, width: 213.333334, height: 64),
+                 xRadius: 32, yRadius: 32).fill()
+    for (x, y, width) in [(309.333333, 576.0, 405.333334),
+                           (309.333333, 405.333333, 234.666667),
+                           (309.333333, 234.666667, 320.0)] {
+        NSBezierPath(roundedRect: NSRect(x: x, y: y, width: width, height: 64), xRadius: 32, yRadius: 32).fill()
+    }
+    NSGraphicsContext.restoreGraphicsState()
+    return bitmap.representation(using: .png, properties: [:])!
+}
+
 for size in [16, 32, 128, 256, 512] {
-    try render(size: size).write(to: iconset.appendingPathComponent("icon_\(size)x\(size).png"))
-    try render(size: size * 2).write(to: iconset.appendingPathComponent("icon_\(size)x\(size)@2x.png"))
+    try renderApp(size: size).write(to: iconset.appendingPathComponent("icon_\(size)x\(size).png"))
+    try renderApp(size: size * 2).write(to: iconset.appendingPathComponent("icon_\(size)x\(size)@2x.png"))
 }
 try render(size: 36).write(to: resources.appendingPathComponent("MenuBarIcon.png"))
-try render(size: 1024, preview: true).write(to: resources.appendingPathComponent("AppIcon-preview.png"))
+try renderApp(size: 1024).write(to: resources.appendingPathComponent("AppIcon-preview.png"))
