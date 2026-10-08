@@ -44,13 +44,15 @@ jobs:
           lipo dist/iClip.app/Contents/MacOS/iClip -verify_arch "${{ matrix.arch }}"
           codesign --verify --strict dist/iClip.app
       - name: Prepare artifact directory
+        id: artifact
         run: |
+          VERSION="$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' dist/iClip.app/Contents/Info.plist)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           mkdir -p artifact
           cp -R dist/iClip.app artifact/iClip.app
-          cp scripts/restore-app-permissions.command artifact/restore-app-permissions.command
       - uses: actions/upload-artifact@v4
         with:
-          name: iClip-${{ matrix.arch }}
+          name: iClip-MacOS-${{ matrix.arch }}-${{ steps.artifact.outputs.version }}
           path: artifact/
           include-hidden-files: true
           if-no-files-found: error
