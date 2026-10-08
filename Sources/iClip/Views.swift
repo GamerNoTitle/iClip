@@ -198,7 +198,10 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped).frame(width: 520, height: 540)
-        .onAppear { limitDraft = String(store.history.limit) }
+        .onAppear { limitDraft = String(store.history.limit); store.refreshLaunchAtLogin() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            store.refreshLaunchAtLogin()
+        }
         .onChange(of: store.ready) { _, ready in
             if ready { limitDraft = String(store.history.limit) }
         }

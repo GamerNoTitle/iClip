@@ -113,6 +113,10 @@ final class Store: ObservableObject {
         UserDefaults.standard.set(try? JSONEncoder().encode(value), forKey: "shortcut")
     }
 
+    func refreshLaunchAtLogin() {
+        launchAtLogin = SMAppService.mainApp.status == .enabled
+    }
+
     func setLaunchAtLogin(_ enabled: Bool) {
         do {
             if enabled { try SMAppService.mainApp.register() }
@@ -122,6 +126,9 @@ final class Store: ObservableObject {
                 error = "请在系统设置 → 通用 → 登录项中允许 iClip。"
                 SMAppService.openSystemSettingsLoginItems()
             }
-        } catch { self.error = "修改开机启动失败：\(error.localizedDescription)" }
+        } catch {
+            refreshLaunchAtLogin()
+            self.error = "修改开机启动失败：\(error.localizedDescription)"
+        }
     }
 }
