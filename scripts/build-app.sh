@@ -8,6 +8,8 @@ APP="$ROOT/dist/iClip.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/iClip" "$APP/Contents/MacOS/iClip"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
+cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
+cp "$ROOT/Resources/MenuBarIcon.png" "$APP/Contents/Resources/MenuBarIcon.png"
 # Set SIGN_IDENTITY to an Apple Development/Developer ID identity for stable permissions.
 codesign --force --sign "${SIGN_IDENTITY:--}" "$APP"
 codesign --verify --strict "$APP"

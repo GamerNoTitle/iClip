@@ -22,7 +22,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         store = Store()
         store.hotKey.action = { [weak self] in self?.togglePanel() }
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.image = NSImage(systemSymbolName: "clipboard", accessibilityDescription: "iClip 剪贴板")
+        let menuIcon = Bundle.main.url(forResource: "MenuBarIcon", withExtension: "png")
+            .flatMap { NSImage(contentsOf: $0) }
+            ?? NSImage(systemSymbolName: "clipboard", accessibilityDescription: "iClip 剪贴板")
+        menuIcon?.size = NSSize(width: 18, height: 18)
+        menuIcon?.isTemplate = true
+        statusItem.button?.image = menuIcon
+        statusItem.button?.setAccessibilityLabel("iClip 剪贴板")
         let menu = NSMenu()
         menu.addItem(withTitle: "打开剪贴板", action: #selector(openPanel), keyEquivalent: "")
         menu.addItem(.separator())
