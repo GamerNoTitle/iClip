@@ -150,6 +150,7 @@ struct SettingsView: View {
     @State private var limitError: String?
     @State private var pendingLimit: Int?
     @State private var confirmLimit = false
+    @State private var accessibilityGranted = AXIsProcessTrusted()
     var body: some View {
         Form {
             Section("通用") {
@@ -171,9 +172,14 @@ struct SettingsView: View {
             Section("粘贴权限") {
                 Text("自动粘贴需要辅助功能权限。未授权时，选择条目只复制内容，再按 ⌘V 即可粘贴。")
                     .font(.callout).foregroundStyle(.secondary)
-                Button("授权辅助功能") {
-                    let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-                    _ = AXIsProcessTrustedWithOptions(options)
+                Label(accessibilityGranted ? "辅助功能已授权" : "辅助功能未授权",
+                      systemImage: accessibilityGranted ? "checkmark.circle.fill" : "exclamationmark.circle")
+                    .foregroundStyle(accessibilityGranted ? Color.green : Color.orange)
+                if !accessibilityGranted {
+                    Button("授权辅助功能") {
+                        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+                        accessibilityGranted = AXIsProcessTrustedWithOptions(options)
+                    }
                 }
             }
             Section("历史与隐私") {
@@ -198,9 +204,21 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped).frame(width: 520, height: 540)
-        .onAppear { limitDraft = String(store.history.limit); store.refreshLaunchAtLogin() }
+        .onAppear {
+            limitDraft = String(store.history.limit)
+            store.refreshLaunchAtLogin()
+            accessibilityGranted = AXIsProcessTrusted()
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             store.refreshLaunchAtLogin()
+            accessibilityGranted = AXIsProcessTrusted()
+        }
+        .task {
+            while !Task.isCancelled {
+                do { try await Task.sleep(for: .seconds(1)) }
+                catch { return }
+                accessibilityGranted = AXIsProcessTrusted()
+            }
         }
         .onChange(of: store.ready) { _, ready in
             if ready { limitDraft = String(store.history.limit) }

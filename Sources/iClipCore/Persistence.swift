@@ -20,6 +20,7 @@ public struct Persistence: Sendable {
             withIntermediateDirectories: true
         )
         try data.write(to: url, options: .atomic)
+        try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
     }
 
     /// A missing file is an empty history; malformed JSON and other I/O errors

@@ -38,6 +38,19 @@ private func withStorage(_ body: (URL) throws -> Void) throws {
     }
 }
 
+@Test func historyFileIsOwnerOnlyAfterEverySave() throws {
+    try withStorage { url in
+        let storage = Persistence(url: url)
+        try storage.save(HistoryState())
+        var attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        #expect((attributes[.posixPermissions] as? NSNumber)?.intValue == 0o600)
+        try FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: url.path)
+        try storage.save(HistoryState(entries: [ClipboardEntry(text: "private")]))
+        attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        #expect((attributes[.posixPermissions] as? NSNumber)?.intValue == 0o600)
+    }
+}
+
 @Test func malformedJSONIsReported() throws {
     try withStorage { url in
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)

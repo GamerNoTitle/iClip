@@ -38,11 +38,11 @@ Bundle Identifier：`io.github.gamernotitle.iclip`。
 4. 点击条目的图钉置顶；删除按钮会删除该条内容，包括置顶内容。
 5. 开机启动由系统 `SMAppService` 管理；若需要审批，在系统登录项设置中允许。
 
-历史与保留数量存储在 `~/Library/Application Support/iClip/history.json`；快捷键存于应用的 UserDefaults。历史明文保存，没有加密，因此不要将敏感内容置顶。若历史文件损坏，程序暂停保存以防覆盖原文件，备份修复后重启。
+历史与保留数量存储在 `~/Library/Application Support/iClip/history.json`；快捷键存于应用的 UserDefaults。历史文件以仅当前用户读写的 0600 权限保存，但内容仍是明文，没有加密，因此不要将敏感内容置顶。若历史文件损坏，程序暂停保存以防覆盖原文件，备份修复后重启。
 
 ## 验证状态
 
 - Swift 6 编译成功，release app 包成功生成并通过 codesign 校验。
-- 29 项 Swift Testing 测试通过（包括无限历史、置顶与保留数量在重启后的恢复）：去重、格式保留、置顶、淘汰、默认1000/零无限制、JSON读写等。
+- 30 项 Swift Testing 测试通过（包括无限历史、置顶与保留数量在重启后的恢复）：去重、格式保留、置顶、淘汰、默认1000/零无限制、JSON读写等。
 - 实际 GUI、跨应用自动粘贴、登录项及长期性能仍需运行验证；构建成功不代表这些交互已验证。
 - 当前构建架构取决于本机 Swift 工具链，不是通用二进制。
