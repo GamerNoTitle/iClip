@@ -43,11 +43,15 @@ jobs:
           test -d dist/iClip.app/Contents/Resources/iClip_iClip.bundle
           lipo dist/iClip.app/Contents/MacOS/iClip -verify_arch "${{ matrix.arch }}"
           codesign --verify --strict dist/iClip.app
-      - name: Create distributable ZIP
-        run: ditto -c -k --sequesterRsrc --keepParent dist/iClip.app "dist/iClip-${{ matrix.arch }}.zip"
+      - name: Prepare artifact directory
+        run: |
+          mkdir -p artifact
+          cp -R dist/iClip.app artifact/iClip.app
+          cp scripts/restore-app-permissions.command artifact/restore-app-permissions.command
       - uses: actions/upload-artifact@v4
         with:
           name: iClip-${{ matrix.arch }}
-          path: dist/iClip-${{ matrix.arch }}.zip
+          path: artifact/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
