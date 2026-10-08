@@ -42,7 +42,7 @@ jobs:
           test -s dist/iClip.app/Contents/Resources/Assets.car
           test -s dist/iClip.app/Contents/Resources/MenuBarIcon.png
           test -d dist/iClip.app/Contents/Resources/iClip_iClip.bundle
-          lipo -verify_arch "${{ matrix.arch }}" dist/iClip.app/Contents/MacOS/iClip
+          lipo dist/iClip.app/Contents/MacOS/iClip -verify_arch "${{ matrix.arch }}"
           codesign --verify --strict dist/iClip.app
       - name: Create distributable ZIP
         run: ditto -c -k --sequesterRsrc --keepParent dist/iClip.app "dist/iClip-${{ matrix.arch }}.zip"
