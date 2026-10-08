@@ -22,7 +22,7 @@ struct EntryAgeView: View {
         case .daysHours(let days, let hours):
             key = "age.days_hours"; values = [days, hours]
         }
-        let pattern = Bundle.module.localizedString(forKey: key, value: nil, table: nil)
+        let pattern = Localization.bundle.localizedString(forKey: key, value: nil, table: nil)
         return String(format: pattern, locale: Locale.current, arguments: values)
     }
 }
