@@ -47,7 +47,8 @@ final class Store: ObservableObject {
     }
 
     private func startMonitoring() {
-        captureCurrent()
+        captureCurrent(initial: true)
+        changeCount = NSPasteboard.general.changeCount
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self else { return }
@@ -61,8 +62,13 @@ final class Store: ObservableObject {
         timer?.tolerance = 0.15
     }
 
-    private func captureCurrent() {
+    private func captureCurrent(initial: Bool = false) {
         guard let entry = PasteboardBridge.read(from: .general) else { return }
+        if initial {
+            history.captureInitial(entry)
+            save()
+            return
+        }
         switch entry.kind {
         case .text: history.capture(entry.text)
         case .files: history.captureFiles(entry.filePaths)

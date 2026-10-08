@@ -1,0 +1,4 @@
+"age.minutes_seconds" = "%d 分 %d 秒";
+"age.minutes" = "%d 分钟";
+"age.hours_minutes" = "%d 小时 %d 分钟";
+"age.days_hours" = "%d 天 %d 小时";

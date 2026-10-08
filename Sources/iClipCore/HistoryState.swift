@@ -35,6 +35,13 @@ public struct HistoryState: Codable, Sendable, Equatable {
         captureEntry(ClipboardEntry(text: "图片", kind: .image, imageData: data))
     }
 
+    /// Startup sampling must not pretend a restored clipboard was just copied.
+    public mutating func captureInitial(_ entry: ClipboardEntry) {
+        guard let key = payloadKey(for: entry),
+              !entries.contains(where: { payloadKey(for: $0) == key }) else { return }
+        captureEntry(entry)
+    }
+
     private mutating func captureEntry(_ captured: ClipboardEntry) {
         guard let key = payloadKey(for: captured) else { return }
         var entry: ClipboardEntry

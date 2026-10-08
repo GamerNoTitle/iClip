@@ -61,7 +61,7 @@ struct ClipboardView: View {
                                             }
                                             HStack(spacing: 5) {
                                                 if entry.isPinned { Image(systemName: "pin.fill").foregroundStyle(.tint) }
-                                                Text(entry.createdAt, style: .relative)
+                                                EntryAgeView(date: entry.createdAt)
                                                 Spacer()
                                                 switch entry.kind {
                                                 case .text: Text("\(entry.text.count) 字符")

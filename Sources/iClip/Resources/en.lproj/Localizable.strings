@@ -1,0 +1,4 @@
+"age.minutes_seconds" = "%d min %d sec";
+"age.minutes" = "%d min";
+"age.hours_minutes" = "%d hr %d min";
+"age.days_hours" = "%d days %d hr";
