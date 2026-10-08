@@ -176,7 +176,7 @@ struct SettingsView: View {
             Section("粘贴权限") {
                 Text("自动粘贴需要辅助功能权限。未授权时，选择条目只复制内容，再按 ⌘V 即可粘贴。")
                     .font(.callout).foregroundStyle(.secondary)
-                Label(accessibilityGranted ? "辅助功能已授权" : "辅助功能未授权",
+                Label(accessibilityGranted ? "辅助功能已授权" : "当前进程未获得辅助功能授权",
                       systemImage: accessibilityGranted ? "checkmark.circle.fill" : "exclamationmark.circle")
                     .foregroundStyle(accessibilityGranted ? Color.green : Color.orange)
                 if !accessibilityGranted {
@@ -184,6 +184,9 @@ struct SettingsView: View {
                         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
                         accessibilityGranted = AXIsProcessTrustedWithOptions(options)
                     }
+                    Text("若系统设置中已开启权限，但这里仍未授权，请完整退出 iClip 后重新打开。更新临时签名的本地构建后，可能需要移除旧授权并重新添加当前应用。")
+                        .font(.caption).foregroundStyle(.secondary)
+                    Button("退出 iClip 以重新启动") { NSApp.terminate(nil) }
                 }
             }
             Section("历史与隐私") {
