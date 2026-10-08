@@ -64,16 +64,16 @@ func renderApp(size: Int) throws -> Data {
                 blue: CGFloat(hex & 255) / 255, alpha: 1)
     }
     let blue = color(0x3498DB)
-    blue.setFill()
+    NSColor.white.setFill()
     NSBezierPath(roundedRect: NSRect(x: 0, y: 0, width: 1024, height: 1024), xRadius: 210, yRadius: 210).fill()
     // SVG coordinates converted from top-left to AppKit's bottom-left origin.
     color(0x1ABC9C).setFill()
     NSBezierPath(roundedRect: NSRect(x: 170.666667, y: 85.333333, width: 682.666666, height: 768),
                  xRadius: 96, yRadius: 96).fill()
-    color(0xECF0F1).setFill()
+    blue.setFill()
     NSBezierPath(roundedRect: NSRect(x: 341.333333, y: 746.666667, width: 341.333334, height: 192),
                  xRadius: 96, yRadius: 96).fill()
-    blue.setFill()
+    NSColor.white.setFill()
     NSBezierPath(roundedRect: NSRect(x: 405.333333, y: 810.666667, width: 213.333334, height: 64),
                  xRadius: 32, yRadius: 32).fill()
     for (x, y, width) in [(309.333333, 576.0, 405.333334),
