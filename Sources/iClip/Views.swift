@@ -206,8 +206,18 @@ struct SettingsView: View {
                 }
             }
             Section {
-                Text("iClip · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0")")
-                    .font(.caption).foregroundStyle(.secondary)
+                HStack {
+                    Text("iClip · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")")
+                        .font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Link(destination: URL(string: "https://github.com/GamerNoTitle/iClip")!) {
+                        GitHubIcon().fill(.secondary).frame(width: 18, height: 18)
+                            .padding(4).contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .help("在 GitHub 查看 iClip")
+                    .accessibilityLabel("在 GitHub 查看 iClip")
+                }
             }
         }
         .formStyle(.grouped).frame(width: 520, height: 540)
