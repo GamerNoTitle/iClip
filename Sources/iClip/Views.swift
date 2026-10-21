@@ -183,6 +183,7 @@ struct SettingsView: View {
                     Button("授权辅助功能") {
                         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
                         accessibilityGranted = AXIsProcessTrustedWithOptions(options)
+                        if !accessibilityGranted { PermissionGuidance.shared.show() }
                     }
                     Text("若系统设置中已开启权限，但这里仍未授权，请完整退出 iClip 后重新打开。更新临时签名的本地构建后，可能需要移除旧授权并重新添加当前应用。")
                         .font(.caption).foregroundStyle(.secondary)
