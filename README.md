@@ -20,6 +20,10 @@
 
 软件提供了一定的设置项，允许修改打开剪贴板的快捷键，设置开机启动和显示菜单栏图标等，具体功能可以在设置页查看
 
+## 展示页
+
+静态展示页独立维护在 [`gh-page` 分支](https://github.com/GamerNoTitle/iClip/tree/gh-page)，页面文件位于该分支根目录。GitHub Pages、Vercel 和 Cloudflare Pages 的部署说明也在该分支的 README 中。
+
 ## 构建
 
 需要安装 Xcode 26 或以上（Liquid Glass SDK）及 Swift 6
