@@ -208,7 +208,7 @@ struct SettingsView: View {
             }
             Section {
                 HStack {
-                    Text("iClip · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")")
+                    Text("iClip · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.1")")
                         .font(.caption).foregroundStyle(.secondary)
                     Spacer()
                     Link(destination: URL(string: "https://github.com/GamerNoTitle/iClip")!) {
