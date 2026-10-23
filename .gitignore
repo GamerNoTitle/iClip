@@ -1,0 +1,5 @@
+.build/
+dist/
+.vercel/
+.wrangler/
+node_modules/
