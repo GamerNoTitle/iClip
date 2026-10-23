@@ -1937,14 +1937,29 @@ code {
   padding: 38px 0 34px;
   border-top: 1px solid var(--line);
 }
-.footer-brand { display: flex; align-items: flex-start; gap: 12px; }
-.footer-brand img { border-radius: 9px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14); }
+.footer-brand { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.footer-brand > div { min-width: 0; }
+.footer-brand img { flex: none; border-radius: 9px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14); }
 .footer-name { font-size: 15px; font-weight: 680; letter-spacing: -0.02em; }
 .footer-tagline { margin-top: 4px; max-width: 250px; color: var(--text-3); font-size: 11.5px; line-height: 1.6; }
 .footer-links { display: flex; gap: clamp(40px, 7vw, 80px); }
 .footer-links h4 { color: var(--text-3); font-size: 9.5px; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; }
 .footer-links a { display: block; margin-top: 10px; color: var(--text-2); font-size: 11.5px; transition: color 0.2s ease; }
 .footer-links a:hover { color: var(--accent-strong); }
+.ai-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.ai-notice > .ico { margin-top: 2px; color: var(--accent-strong); font-size: 16px; }
+.ai-notice > div { min-width: 0; }
+.ai-notice h2 { margin: 0; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.ai-notice p { margin-top: 3px; color: var(--text-2); font-size: 11.5px; line-height: 1.7; overflow-wrap: anywhere; }
 .footer-bottom {
   display: flex;
   align-items: center;
@@ -2114,9 +2129,25 @@ code {
   .privacy-card { padding: 28px 22px; border-radius: 24px; }
   .privacy-copy h2 { font-size: 30px; }
   .privacy-list li { padding: 12px; }
-  .footer-grid { flex-direction: column; gap: 30px; }
-  .footer-links { width: 100%; justify-content: space-between; gap: 24px; }
-  .footer-bottom { flex-wrap: wrap; gap: 8px 18px; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding-block: 28px 24px;
+  }
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 24px;
+    justify-content: normal;
+  }
+  .footer-links > div { min-width: 0; }
+  .footer-links a { width: fit-content; padding-block: 5px; margin-top: 2px; }
+  .footer-links h4 { margin-bottom: 7px; }
+  .footer-bottom { align-items: flex-start; flex-wrap: wrap; gap: 10px 18px; }
+  .footer-bottom > p { min-width: 0; overflow-wrap: anywhere; }
+  .footer-top { flex: none; white-space: nowrap; margin-left: auto; }
   .callout { align-items: flex-start; }
 }
 
